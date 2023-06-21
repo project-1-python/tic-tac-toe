@@ -2,7 +2,7 @@ def board(grid):
     print('     |     |     ')
     for i in range(3):
         for j in range(3):
-            print(f'  {grid[i][j]}  |', end = '')
+            print(f'  {grid[i][j]}  |', end='')
 
         print('\b')
         if i != 2:
@@ -10,99 +10,87 @@ def board(grid):
     print('     |     |     ')
 
 
-def terminal_state(grid, ch = 'X'):
-    d1, d2 = 0, 0
+def terminal(grid):
     filled = 0
-
-    # rows, cols and draw check
     for i in range(3):
-        r, c = 0, 0
-        for j in range(3):
-            if grid[i][j] == ch:
-                r += 1
-            if grid[j][i] == ch:
-                c += 1
-            if grid[i][j] != ' ':
-                filled += 1
-        if r == 3 or c == 3 or filled == 9:
+        if grid[i][0] == grid[i][1] == grid[i][2] and grid[i][0] != ' ':
             return True
+        if grid[0][i] == grid[1][i] == grid[2][i] and grid[0][i] != ' ':
+            return True
+        if ' ' not in grid[i]:
+            filled += 1
 
-    # diagonal check
-    for i in range(3):
-        if grid[i][i] == ch:
-            d1 += 1
-        if grid[i][2 - i] == ch:
-            d2 += 1
-
-    if d1 == 3 or d2 == 3:
-        print("diag")
+    if filled == 3:
         return True
 
-    if ch == 'X':
-        return terminal_state(grid, 'O')
+    if grid[0][0] == grid[1][1] == grid[2][2] and grid[1][1] != ' ':
+        return True
+
+    if grid[0][2] == grid[1][1] == grid[2][0] and grid[1][1] != ' ':
+        return True
 
     return False
-
-def value(s):
-    n = 0
-    d1, d2 = 0, 0
-    c = ['X', 'O']
-    while n < 2:
-        ch = c[n]
-        for i in range(3):
-            r, c = 0, 0
-            for j in range(3):
-                if s[i][j] == ch:
-                    r += 1
-                if s[j][i] == ch:
-                    c += 1
-            if r == 3 or c == 3:
-                if ch == 'X':
-                    return 1
-                return -1
-
-        # diagonal check
-        for i in range(3):
-            if s[i][i] == ch:
-                d1 += 1
-            if s[i][2 - i] == ch:
-                d2 += 1
-
-        if d1 == 3 or d2 == 3:
-            if ch == 'X':
-                return 1
-            return -1
-        n += 1
-
-        return 0
 
 
 def actions(arr):
     actions_list = []
     for i in range(3):
         for j in range(3):
-            if arr[i][j] == 0:
+            if arr[i][j] == ' ':
                 actions_list.append((i, j))
 
     return actions_list
 
 
-def player(ch):
+def score(ch):
     if ch == 'X':
         return 1
-    return 2
+    if ch == 'O':
+        return -1
 
 
-def minimax(s):
-    if terminal_state(s):
-        return value(s)
+def value(grid):
+    for i in range(3):
+        if grid[i][0] == grid[i][1] == grid[i][2] and grid[i][0] != ' ':
+            return score(grid[i][0])
+        if grid[0][i] == grid[1][i] == grid[2][i] and grid[0][i] != ' ':
+            return score(grid[0][i])
+
+    if grid[0][0] == grid[1][1] == grid[2][2] and grid[1][1] != ' ':
+        return score(grid[1][1])
+
+    if grid[0][2] == grid[1][1] == grid[2][0] and grid[1][1] != ' ':
+        return score(grid[1][1])
+
+    return 0
+
+
+def player(ch):
+    if ch == 'X':
+        return 'MAX'
+    return 'MIN'
+
+
+def result(grid, r, ch):
+    new_grid = grid.copy()
+    new_grid[r[0]][r[1]] = ch
+    return new_grid
+
+
+def minimax(grid, ch='X'):
+    if terminal(grid):
+        return value(grid)
+    if player(ch) == 'MAX':
+        val = float("-inf")
+        pass
+
+    if player(ch) == "MIN":
+        val = float("inf")
+        pass
 
 
 grid_1 = [
-    ['O', ' ', 'X'],
-    ['O', 'O', 'X'],
-    ['O', 'X', 'O']
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
 ]
-
-print(terminal_state(grid_1))
-print(value(grid_1))
