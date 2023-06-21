@@ -4,9 +4,12 @@ minimax algorithm
 3. player: used to determine whose turn to play the max or  min
 4. actions: gives all the possible actions we take in that state
 5. result: takes a state and on action and tells us what the new state of game will be after that action
+
+```
 	  | X | O        |   |              | X | O   
        -----------    -----------        -----------  
 result( X | X | O  ,     |   |     ) =    X | X | O
        -----------    -----------        -----------
           | O |          |   | X            | O | X 
 
+```
