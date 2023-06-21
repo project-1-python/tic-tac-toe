@@ -1,3 +1,5 @@
+import copy
+
 def board(grid = None):
     print('     |     |     ')
     for i in range(3):
@@ -72,28 +74,31 @@ def player(ch):
 
 
 def result(grid, r, ch):
-    new_grid = grid.copy()
+    new_grid = copy.deepcopy(grid)
     new_grid[r[0]][r[1]] = ch
-    return new_grid
+    return new_grid.copy()
 
 
-def minimax(mgrid, ch='X', pos=(None, None)):
+def minimax(mgrid, ch='X', pos=(None, None), t = 0):
     global main_grid
     grid = mgrid.copy()
     if terminal(grid):
         return value(grid), *pos
     if player(ch) == 'MAX':
-        val = float("-inf"), None, None
+        val = -99, None, None
         for positions in actions(grid):
-            val = max(val, minimax(result(grid, positions, 'X'), 'O', positions))
+            val = max(val, minimax(result(grid, positions, 'X'), 'O', positions, 1))
 
-        main_grid[val[1]][val[2]] = 'X'
-        print(val)
+        if t == 0:
+            main_grid[val[1]][val[2]] = 'X'
+        return val
 
     if player(ch) == "MIN":
-        val = float("inf")
+        val = 99, None, None
         for positions in actions(grid):
-            val = min(val, minimax(result(grid, positions, 'O'), 'X', positions))
+            val = min(val, minimax(result(grid, positions, 'O'), 'X', positions, 1))
+
+        return val
 
 
 def play_game():
@@ -106,10 +111,11 @@ def play_game():
 
 
 
+
 main_grid = [
-    ['X', 'O', ' '],
-    ['O', ' ', ' '],
-    ['O', 'X', ' ']
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
 ]
 
 play_game()
