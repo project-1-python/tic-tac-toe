@@ -1,6 +1,7 @@
 import copy
 
-def board(grid = None):
+
+def board(grid=None):
     print('     |     |     ')
     for i in range(3):
         for j in range(3):
@@ -79,37 +80,52 @@ def result(grid, r, ch):
     return new_grid.copy()
 
 
-def minimax(mgrid, ch='X', pos=(None, None), t = 0):
+def minimax(mgrid, ch='X', t=0):
     global main_grid
     grid = mgrid.copy()
     if terminal(grid):
-        return value(grid), *pos
+        return value(grid)
     if player(ch) == 'MAX':
-        val = -99, None, None
+        old = -98
+        val = -98
+        i, j = None, None
         for positions in actions(grid):
-            val = max(val, minimax(result(grid, positions, 'X'), 'O', positions, 1))
+            val = max(val, minimax(result(grid, positions, 'X'), 'O', 1))
+            if old < val:
+                i, j = positions
+                old = val
 
         if t == 0:
-            main_grid[val[1]][val[2]] = 'X'
+            main_grid[i][j] = 'X'
         return val
 
     if player(ch) == "MIN":
-        val = 99, None, None
+        val = 99
         for positions in actions(grid):
-            val = min(val, minimax(result(grid, positions, 'O'), 'X', positions, 1))
+            val = min(val, minimax(result(grid, positions, 'O'), 'X', 1))
 
         return val
 
 
 def play_game():
     global main_grid
+
     while not terminal(main_grid):
-        pos = int(input("Enter position: "))-1
-        main_grid[pos // 3][pos % 3] = 'O'
+        while True:
+            pos = int(input("Enter position: ")) - 1
+            if (pos // 3, pos % 3) in actions(main_grid):
+                main_grid[pos // 3][pos % 3] = 'O'
+                break
+            else:
+                print('enter valid number.')
+
         minimax(main_grid, 'X')
         board(main_grid)
-
-
+    else:
+        if value(main_grid) == 1:
+            print('Computer Won the Game.')
+        else:
+            print('Draw.')
 
 
 main_grid = [
