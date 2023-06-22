@@ -46,10 +46,9 @@ def actions(arr):
 
 
 def score(ch):
-    if ch == 'X':
+    if ch == computer:
         return 1
-    if ch == 'O':
-        return -1
+    return -1
 
 
 def value(grid=None):
@@ -68,41 +67,35 @@ def value(grid=None):
     return 0
 
 
-def player(ch):
-    if ch == 'X':
-        return 'MAX'
-    return 'MIN'
-
-
-def result(grid, r, ch):
+def result(grid, pos, ch):
     new_grid = copy.deepcopy(grid)
-    new_grid[r[0]][r[1]] = ch
+    new_grid[pos[0]][pos[1]] = ch
     return new_grid.copy()
 
 
-def minimax(mgrid, ch='X', t=0):
+def minimax(grid, choice, t=0):
     global main_grid
-    grid = mgrid.copy()
+
     if terminal(grid):
         return value(grid)
-    if player(ch) == 'MAX':
-        old = -98
-        val = -98
+
+    if computer == choice:  # MAX
+        old, val = -98, -98
         i, j = None, None
         for positions in actions(grid):
-            val = max(val, minimax(result(grid, positions, 'X'), 'O', 1))
+            val = max(val, minimax(result(grid, positions, computer), user, 1))
             if old < val:
                 i, j = positions
                 old = val
 
         if t == 0:
-            main_grid[i][j] = 'X'
+            main_grid[i][j] = computer
         return val
 
-    if player(ch) == "MIN":
+    if user == choice:  # MIN
         val = 99
         for positions in actions(grid):
-            val = min(val, minimax(result(grid, positions, 'O'), 'X', 1))
+            val = min(val, minimax(result(grid, positions, user), computer, 1))
 
         return val
 
@@ -114,12 +107,12 @@ def play_game():
         while True:
             pos = int(input("Enter position: ")) - 1
             if (pos // 3, pos % 3) in actions(main_grid):
-                main_grid[pos // 3][pos % 3] = 'O'
+                main_grid[pos // 3][pos % 3] = user
                 break
             else:
                 print('enter valid number.')
 
-        minimax(main_grid, 'X')
+        minimax(main_grid, computer)
         board(main_grid)
     else:
         if value(main_grid) == 1:
@@ -133,5 +126,11 @@ main_grid = [
     [' ', ' ', ' '],
     [' ', ' ', ' ']
 ]
+
+user = input("Enter your choice: (X or O): ").upper()
+if user == 'X':
+    computer = 'O'
+else:
+    computer = 'X'
 
 play_game()
