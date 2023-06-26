@@ -13,8 +13,8 @@ def create_gui():
     for i in range(3):
         row = []
         for j in range(3):
-            button = tk.Button(window, text=" ", width=10, height=5, command=lambda x=i, y=j: button_click(x, y))
-            button.grid(row=i, column=j)
+            button = tk.Button(window, text=" ", width=10, height=5, command=lambda x=i, y=j: button_click(x, y), bg = 'black', fg = 'white')
+            button.grid(row=i+1, column=j)
             row.append(button)
         buttons.append(row)
 
