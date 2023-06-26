@@ -2,25 +2,28 @@ import copy
 import tkinter as tk
 from tkinter import messagebox
 
-def create_gui():
-    global root, buttons
 
-    root = tk.Tk()
-    root.title("Tic Tac Toe")
+def create_gui():
+    global window, buttons
+
+    window = tk.Tk()
+    window.title("Tic Tac Toe")
 
     buttons = []
     for i in range(3):
         row = []
         for j in range(3):
-            button = tk.Button(root, text=" ", width=10, height=5, command=lambda x=i, y=j: button_click(x, y))
+            button = tk.Button(window, text=" ", width=10, height=5, command=lambda x=i, y=j: button_click(x, y))
             button.grid(row=i, column=j)
             row.append(button)
         buttons.append(row)
+
 
 def update_board(grid):
     for i in range(3):
         for j in range(3):
             buttons[i][j]["text"] = grid[i][j]
+
 
 def button_click(x, y):
     global main_grid
@@ -40,6 +43,7 @@ def button_click(x, y):
             messagebox.showinfo("Game Over", "Computer won the game!")
         else:
             messagebox.showinfo("Game Over", "It's a draw!")
+
 
 def is_terminal(grid):
     filled = 0
@@ -62,6 +66,7 @@ def is_terminal(grid):
 
     return False
 
+
 def actions(arr):
     actions_list = []
     for i in range(3):
@@ -71,10 +76,12 @@ def actions(arr):
 
     return actions_list
 
+
 def score(ch):
     if ch == computer:
         return 1
     return -1
+
 
 def value(grid=None):
     for i in range(3):
@@ -91,10 +98,12 @@ def value(grid=None):
 
     return 0
 
+
 def result(grid, pos, ch):
     new_grid = copy.deepcopy(grid)
     new_grid[pos[0]][pos[1]] = ch
     return new_grid.copy()
+
 
 def minimax(grid, choice, t=0):
     global main_grid
@@ -122,12 +131,14 @@ def minimax(grid, choice, t=0):
 
         return val
 
+
 def play_game():
     create_gui()
 
     global main_grid
 
-    root.mainloop()
+    window.mainloop()
+
 
 main_grid = [
     [' ', ' ', ' '],
@@ -137,8 +148,9 @@ main_grid = [
 
 user = input("Enter your choice: (X or O): ").upper()
 if user == 'X':
-    computer = 'O'
+    user = '❌'
+    computer = '⭕'
 else:
-    computer = 'X'
+    computer = '❌'
 
 play_game()
