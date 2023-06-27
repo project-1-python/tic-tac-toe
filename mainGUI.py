@@ -1,19 +1,19 @@
 import copy
-import tkinter as tk
+from tkinter import *
 from tkinter import messagebox
 
 
 def create_gui():
     global window, buttons
 
-    window = tk.Tk()
+    window = Tk()
     window.title("Tic Tac Toe")
 
     buttons = []
     for i in range(3):
         row = []
         for j in range(3):
-            button = tk.Button(window, text=" ", width=10, height=5, command=lambda x=i, y=j: button_click(x, y), bg = 'black', fg = 'white')
+            button =Button(window, text=" ", width=10, height=5, command=lambda x=i, y=j: button_click(x, y), bg = 'white', fg = 'red')
             button.grid(row=i, column=j)
             row.append(button)
         buttons.append(row)
@@ -40,6 +40,26 @@ def button_click(x, y):
 
     if is_terminal(main_grid):
         if value(main_grid) == 1:
+            grid = main_grid
+            for i in range(3):
+                if grid[i][0] == grid[i][1] == grid[i][2] and grid[i][0] != ' ':
+                    buttons[i][0].config(bg = 'green')
+                    buttons[i][1].config(bg = 'green')
+                    buttons[i][2].config(bg = 'green')
+                if grid[0][i] == grid[1][i] == grid[2][i] and grid[0][i] != ' ':
+                    buttons[0][i].config(bg = 'green')
+                    buttons[1][i].config(bg = 'green')
+                    buttons[2][i].config(bg = 'green')
+
+            if grid[0][0] == grid[1][1] == grid[2][2] and grid[1][1] != ' ':
+                buttons[0][0].config(bg = 'green')
+                buttons[1][1].config(bg = 'green')
+                buttons[2][2].config(bg = 'green')
+
+            if grid[0][2] == grid[1][1] == grid[2][0] and grid[1][1] != ' ':
+                buttons[0][2].config(bg = 'green')
+                buttons[1][1].config(bg = 'green')
+                buttons[2][0].config(bg = 'green')
             messagebox.showinfo("Game Over", "Computer won the game!")
         else:
             messagebox.showinfo("Game Over", "It's a draw!")
